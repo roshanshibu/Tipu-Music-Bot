@@ -1,3 +1,5 @@
+import os
+
 # Credentuials -------------------------------------------------------------
 # Telegram Bot Token
 BOT_TOKEN = '000000:ABCDEFGHIJKLMOP'
@@ -29,12 +31,12 @@ known_users = {123456789:"User nickname"}
 DEFAULT_ALBUM_NAME = 'TipuMusic'
 
 LOG_PATH = 'C:\\Logs\\TipuLogs.log'
-
-PROJECT_DIR = 'C:\\Projects\\Tipu-Bot\\'
 MUSIC_DIR = 'C:\\Music\\Tipu Music\\'
 
+
+PROJECT_DIR = os.path.dirname(__file__)
 THUMBNAIL_FILE = 'thumbnail.jpg'
-THUMBNAIL_PATH = PROJECT_DIR + THUMBNAIL_FILE
+THUMBNAIL_PATH = PROJECT_DIR + '\\' + THUMBNAIL_FILE
 
 DB_NAME = 'TipuMusicInfo.db'
-DB_PATH = PROJECT_DIR + DB_NAME
+DB_PATH = PROJECT_DIR + '\\' + DB_NAME
