@@ -42,9 +42,12 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
             is_group = True
             if (user_msg[0] == '/'):
                 user_msg = user_msg[1:]
-            if(not validators.url(user_msg)):
-                if not (TIPU_USERNAME in user_msg):
-                    return
+            # in groups, the bot has to be called explicitly with @BotUsername in the message
+            # otherwise the bot will try to respond to every message and url sent in the group
+            if not (TIPU_USERNAME in user_msg):
+                return
+            else:
+                user_msg = user_msg.replace(TIPU_USERNAME, "").strip()
             
         if (userid in known_users):
             await process_message(chatid, user_msg, bot, userid, is_group)
