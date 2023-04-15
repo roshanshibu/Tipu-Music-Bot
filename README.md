@@ -25,6 +25,7 @@ Tipu is a telegram bot that was created to help download, replicate and manage a
 - A music file
 
 ### Tipu will:
+- Save the file in your server
 - Upload the file to your pCloud folder and playlist,
 - Save details about the song to your local database
 
