@@ -88,7 +88,7 @@ async def process_message(chatid, message, bot, userid, is_group):
             if error_message and error_message.strip():
                 await bot.send_message(chat_id = chatid, text = error_message)
             else:
-                await bot.send_message(chat_id = chatid, text = "something went wrong =")
+                await bot.send_message(chat_id = chatid, text = "something went wrong 😔")
         await bot.delete_message(chat_id = chatid, message_id=downloading_msg_details.message_id)
     else:
         response = "Hi "+known_users[userid]+"!"

@@ -31,9 +31,10 @@ Tipu is a telegram bot that was created to help download, replicate and manage a
 <br>
 
 ## Running Tipu
-1. Create a Telegram Bot via [@BotFather](https://t.me/botfather)
-2. Get [API access](https://developer.spotify.com/) for your spotify account
-3. A pCloud [account](https://e.pcloud.com/#page=register&invite=9pkRZJURX17)
+You will need
+1. A Telegram Bot (make one through [@BotFather](https://t.me/botfather))
+2. [API access](https://developer.spotify.com/) to your spotify account
+3. A [pCloud account](https://e.pcloud.com/#page=register&invite=9pkRZJURX17)
 
 Create a `config.py` file similar to the `sample-config.py`. Update the access credentials.   
 Also update your bot username, your telegram userId, path to the log file and the directory where the music should be saved to. 

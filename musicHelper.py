@@ -5,7 +5,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy.util as util
 import dbHelper
-from mutagen.mp3 import MP3
 import json
 from moviepy.editor import *
 import requests
@@ -67,8 +66,7 @@ def download_music(url):
         mp4_to_mp3(out_file, new_file, True)
         
         set_yt_thumbnail(yt, new_file, 'music.youtube' in url)
-        music_prop = MP3(new_file)
-        duration = music_prop.info.length
+        duration = yt.length
 
         artist_name = yt.author
         if artist_name[-7:] == "- Topic":
