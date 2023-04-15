@@ -37,7 +37,7 @@ You will need
 2. [API access](https://developer.spotify.com/) to your spotify account
 3. A [pCloud account](https://e.pcloud.com/#page=register&invite=9pkRZJURX17)
 
-Create a `config.py` file similar to the `sample-config.py`. Update the access credentials.   
+Create a `config.py` file and copy the contents of `sample-config.py`. Update the access credentials.   
 Also update your bot username, your telegram userId, path to the log file and the directory where the music should be saved to. 
 
 Install dependencies and run `bot.py`

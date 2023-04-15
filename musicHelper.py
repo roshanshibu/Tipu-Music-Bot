@@ -75,10 +75,7 @@ def download_music(url):
         metadata_json = str(json.dumps(metadata))
         m_info.metadata = metadata_json
         
-        
         dbHelper.insert_music_base_info(m_info)
-
-        
         return (new_file, metadata_json)
     except FileExistsError:
         logging.error(f"File [{new_file}] already exists")

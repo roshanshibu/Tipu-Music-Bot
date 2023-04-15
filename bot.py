@@ -21,10 +21,6 @@ TIPU_USERNAME = config.TIPU_USERNAME
 
 known_users = config.known_users
 
-#custom keyboard
-custom_keyboard = [['=M', '=N']]
-reply_markup = telegram.ReplyKeyboardMarkup(custom_keyboard, one_time_keyboard=False, resize_keyboard=True)
-
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
     bot = context.bot
     global update_id
@@ -33,7 +29,6 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Reply to the message
         user_msg = update.message.text
 
-        user_first_name = update.message.chat.first_name
         chatid = update.message.chat.id
         userid = update.message.from_user.id
 
@@ -53,7 +48,7 @@ async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await process_message(chatid, user_msg, bot, userid, is_group)
         # don't talk to strangers
         #else:
-            #generic_response =  "Greetings "+user_first_name
+            #generic_response =  "Greetings"
 
 async def process_message(chatid, message, bot, userid, is_group):
     now = datetime.now()
