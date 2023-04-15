@@ -112,7 +112,7 @@ async def save_audio_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def start_pcloud_upload():
     logging.info("********\tStarting thread to upload file to pcloud\t********")
-    _thread.start_new_thread(os.system, ('python \"' + config.PROJECT_DIR + 'pcloudUpload.py\"',))
+    _thread.start_new_thread(os.system, ('python \"' + config.PROJECT_DIR + '\\pcloudUpload.py\"',))
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)15s:%(lineno)3s - %(funcName)20s() ::: %(message)s',
     filename=config.LOG_PATH, 
