@@ -112,12 +112,18 @@ def start_pcloud_upload():
     logging.info("********\tStarting thread to upload file to pcloud\t********")
     _thread.start_new_thread(os.system, ('python \"' + config.PROJECT_DIR + '\\pcloudUpload.py\"',))
 
-logging.basicConfig(format='%(asctime)s - %(levelname)s - %(filename)15s:%(lineno)3s - %(funcName)20s() ::: %(message)s',
-    filename=config.LOG_PATH, 
-    filemode="a+", 
-    level=logging.INFO,
-    datefmt='%Y-%m-%d %H:%M:%S')
+log_format = '%(asctime)s - %(levelname)s - %(filename)15s:%(lineno)3s - %(funcName)20s() ::: %(message)s'
+log_date_format = '%d-%m-%Y %H:%M:%S'
+root_logger = logging.getLogger()
 
+# Add the log message handler to the logger
+handler = logging.handlers.RotatingFileHandler(
+              config.LOG_PATH, maxBytes=40000, backupCount=5)
+handler.setFormatter(logging.Formatter(log_format, log_date_format))
+
+root_logger.addHandler(handler)
+
+root_logger.setLevel(logging.INFO)
 
 if __name__ == '__main__':
     application = ApplicationBuilder().token(TOKEN).build()
