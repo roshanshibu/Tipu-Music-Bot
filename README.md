@@ -42,7 +42,7 @@ Also update your bot username, your telegram userId, path to the log file and th
 
 Install dependencies and run `bot.py`
 
-> On Windows, consider using [NSSM](https://nssm.cc/) to run the script [as a service](https://www.oreilly.com/library/view/hands-on-software-engineering/9781788622011/66a35121-d465-4318-b566-264dc91b5829.xhtml) 
+> On Windows, consider using [NSSM](https://nssm.cc/) to run the script [as a service](https://stackoverflow.com/a/46450007/5604622) 
 
 
 Happy hoarding :)
