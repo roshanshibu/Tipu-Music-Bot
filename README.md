@@ -1,33 +1,30 @@
 # Tipu Music Bot
-Tipu is a telegram bot that was created to help download, replicate and manage a music collection. It can help you if you like to pretend it's 2005 and hoard MP3 files.  
+Tipu is a telegram bot that was created to help download, replicate and manage a music collection.  
+It can help you if you like to pretend it's 2005 and hoard MP3 files.  
 
-### When you send Tipu:  
-- A YouTube link
+<br>
 
+## When you send Tipu: `a YouTube link`
 ### Tipu will:
 - Download the audio from the link to a folder in your server,
 - Send you the MP3 file,
 - Upload the same file to your pCloud folder and playlist,
-- Save details about the song to your local database
+- Save details about the song to your local sqlite database
 
 <br>
 
-### When you send Tipu:  
-- A Spotify link
-
+## When you send Tipu: `a Spotify link`
 ### Tipu will:
 - Add the song to your Spotify playlist,
 - Find the same song on Youtube (or the best approximate of it), and do the same things done for YouTube links (MP3 file, pCloud upload and save metadata to DB)
 
 <br>
 
-### When you send Tipu:  
-- A music file
-
+## When you send Tipu: `an Audio file`
 ### Tipu will:
 - Save the file in your server
 - Upload the file to your pCloud folder and playlist,
-- Save details about the song to your local database
+- Save details about the song to your local sqlite database
 
 <br>
 
