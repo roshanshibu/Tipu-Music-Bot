@@ -118,7 +118,7 @@ root_logger = logging.getLogger()
 
 # Add the log message handler to the logger
 handler = logging.handlers.RotatingFileHandler(
-              config.LOG_PATH, maxBytes=40000, backupCount=5)
+              config.LOG_PATH, maxBytes=120000, backupCount=5)
 handler.setFormatter(logging.Formatter(log_format, log_date_format))
 
 root_logger.addHandler(handler)
