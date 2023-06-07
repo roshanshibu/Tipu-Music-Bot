@@ -92,12 +92,6 @@ def set_yt_thumbnail(yt_object, audio_file, is_yt_music):
             fp = open(THUMBNAIL_PATH, 'wb')
             fp.write(response.content)
             fp.close()
-            #if the url is from youtube music, crop the thumbnail to get proper album art
-            if is_yt_music:
-                logging.info("Url is from youtube music. Cropping the album art now.")
-                thumbnail_img = Image.open(THUMBNAIL_PATH)
-                album_art_img = thumbnail_img.crop((140, 60, 500, 420))
-                album_art_img.save(THUMBNAIL_PATH)
         #now, we use eyed3 to set this thumbnail for our audio file
         audiofile = eyed3.load(audio_file)
         if (audiofile.tag == None):
