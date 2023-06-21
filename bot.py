@@ -66,12 +66,15 @@ async def process_message(chatid, message, bot, userid, is_group):
             
             thumbnail_file_loc = config.THUMBNAIL_PATH
             # get the album art of the mp3 file about to be sent
-            audio_file = eyed3.load(mp3file)
-            album_art = audio_file.tag.images[0]
-            thumb_file = open(thumbnail_file_loc, "wb")
-            thumb_file.write(album_art.image_data)
-            thumb_file.close()
-            
+            try:
+                audio_file = eyed3.load(mp3file)
+                album_art = audio_file.tag.images[0]
+                thumb_file = open(thumbnail_file_loc, "wb")
+                thumb_file.write(album_art.image_data)
+                thumb_file.close()
+            except:
+                logging.error("Error while getting album art for telegram chat")
+
             logging.info(f"Starting to send MP3 file [{mp3file}]...")            
             await bot.send_audio(chat_id = chatid, audio=open(mp3file, 'rb'), thumb=open(thumbnail_file_loc,"rb"))
             logging.info(f"MP3 file [{mp3file}] was sent to chat!")
