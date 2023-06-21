@@ -1,4 +1,5 @@
 import logging
+from logging import handlers
 import telegram
 from telegram.error import NetworkError
 from time import sleep
@@ -57,14 +58,11 @@ async def process_message(chatid, message, bot, userid, is_group):
     if (validators.url(message)):
         downloading_msg_details = await bot.send_message(chat_id = chatid, text = "downloading...")
 
-        mp3file, error_message = musicHelper.download_music(message)
+        # mp3file, error_message = musicHelper.download_music(message)
+        mp3file, error_message = musicHelper.download_music_ydl(message)
     
         if (mp3file != "ERROR"):
             logging.info(f"Downloaded file [{mp3file}]")
-            s_metadata_json = error_message
-            metadata = json.loads(s_metadata_json)
-            logging.info(f"metadata [{metadata}]")
-            _duration = metadata['duration']
             
             thumbnail_file_loc = config.THUMBNAIL_PATH
             # get the album art of the mp3 file about to be sent
@@ -75,7 +73,7 @@ async def process_message(chatid, message, bot, userid, is_group):
             thumb_file.close()
             
             logging.info(f"Starting to send MP3 file [{mp3file}]...")            
-            await bot.send_audio(chat_id = chatid, audio=open(mp3file, 'rb'), duration=_duration, thumb=open(thumbnail_file_loc,"rb"))
+            await bot.send_audio(chat_id = chatid, audio=open(mp3file, 'rb'), thumb=open(thumbnail_file_loc,"rb"))
             logging.info(f"MP3 file [{mp3file}] was sent to chat!")
             #save the file to pCloud also
             start_pcloud_upload()

@@ -12,6 +12,8 @@ import eyed3
 from eyed3.id3.frames import ImageFrame
 from PIL import Image
 import config
+import subprocess
+import glob
 
 import logging
 log = logging.getLogger(__name__)
@@ -189,6 +191,43 @@ def add_song_to_spotify_pl(spotify_ob, track_uri, playlist_uri):
         tracks=[track_uri],
         position=None)
     return
+
+
+def download_music_ydl(url):
+    try:
+        # subprocess.run(["Binaries/yt-dlp.exe", url, "--ffmpeg-location", "Binaries/ffmpeg.exe", "--extract-audio", "--audio-format", "mp3", "--no-playlist", "--write-thumbnail", "--add-metadata"])
+        proc=subprocess.Popen(["Binaries/yt-dlp.exe", url, "--ffmpeg-location", "Binaries/ffmpeg.exe", "--extract-audio", "--audio-format", "mp3", "--no-playlist", "--write-thumbnail", "--add-metadata"], 
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for line in proc.stdout:
+            if '[download]' not in str(line):
+                logging.info(line)
+        proc.wait()
+
+        # get the latest created mp3 and webp file
+        mp3_files = glob.glob(f'{config.MUSIC_DIR}*.mp3')
+        webp_files = glob.glob(f'{config.MUSIC_DIR}*.webp')
+        latest_mp3 = max(mp3_files, key=os.path.getctime)
+        latest_webp = max(webp_files, key=os.path.getctime)
+        print(latest_mp3, latest_webp)
+
+        # if the url is from youtube music, crop the webp
+        if "music.youtube.com/" in url:
+            thumbnail_img = Image.open(latest_webp)
+            album_art_img = thumbnail_img.crop((280, 0, 1000, 720))
+            album_art_img.save(latest_webp, "jpeg")
+
+        audio_file = eyed3.load(latest_mp3)
+        if (audio_file.tag == None):
+            audio_file.initTag()
+
+        audio_file.tag.images.set(ImageFrame.FRONT_COVER, open(latest_webp, 'rb').read(), 'image/jpeg')
+        audio_file.tag.save(version=eyed3.id3.ID3_V2_3)
+        audio_file.tag.save()
+
+        os.remove(latest_webp)
+        return (latest_mp3, "{}")
+    except Exception as e:
+        return process_error(str(e))
 
 #mp3file = dowmload_music("https://youtu.be/lXPYzs2BgWg")
 #mp3file = dowmload_music("https://open.spotify.com/track/5JKU2tXiG3yvJtefNwe7ZQ?si=RaJ6sp2cR5Ow-7lZM7R3wA&utm_source=native-share-menu")

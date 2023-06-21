@@ -4,3 +4,5 @@ thumbnail.jpg
 TipuMusicInfo.db
 config.py
 .tmp.driveupload/
+ytdlpMigrationTest.py
+Binaries/yt-dlp.conf
