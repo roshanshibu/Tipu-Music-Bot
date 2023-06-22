@@ -256,6 +256,11 @@ def download_music_embed_ytdl(download_url):
         
         ydl = yt_dlp.YoutubeDL(ydl_opts)
         info_dict = ydl.extract_info(download_url, download=True)
+        
+        uploader = info_dict.get("uploader")
+        uploader = uploader.replace(" - Topic", "")
+        uploader = uploader.replace("VEVO", "")
+        
         filename = ydl.prepare_filename(info_dict)
         filename_wo_ext = Path(filename).with_suffix('')
         # thumbnails may come in any format. To get the correct file, just find the one with the 
@@ -284,7 +289,7 @@ def download_music_embed_ytdl(download_url):
         audio_file.tag.images.set(ImageFrame.FRONT_COVER, open(thumbnail, 'rb').read(), 'image/jpeg')
         
         #also set the artist name
-        audio_file.tag.artist = info_dict.get("uploader")
+        audio_file.tag.artist = uploader
         audio_file.tag.save(version=eyed3.id3.ID3_V2_3)
         audio_file.tag.save()
         # update the thumbnail file
@@ -295,7 +300,7 @@ def download_music_embed_ytdl(download_url):
         filename = final_filename
         m_info.filename = filename
         
-        metadata ={"duration": str(info_dict.get("duration")), "artist": info_dict.get("uploader")}
+        metadata ={"duration": str(info_dict.get("duration")), "artist": uploader}
         metadata_json = str(json.dumps(metadata))
         m_info.metadata = metadata_json
         dbHelper.insert_music_base_info(m_info)
