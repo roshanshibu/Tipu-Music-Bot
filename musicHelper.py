@@ -258,6 +258,8 @@ def download_music_embed_ytdl(download_url):
         info_dict = ydl.extract_info(download_url, download=True)
         
         uploader = info_dict.get("uploader")
+        if info_dict.get("artist") is not None:
+            uploader = info_dict.get("artist")
         uploader = uploader.replace(" - Topic", "")
         uploader = uploader.replace("VEVO", "")
         
