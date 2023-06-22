@@ -249,7 +249,7 @@ def download_music_embed_ytdl(download_url):
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'mp3',
         }],
-        'outtmpl': '%(creator)s - %(title)s.%(ext)s',
+        'outtmpl': '%(title)s.%(ext)s',
         'writethumbnail': True,
         'noplaylist': True,
         }
@@ -263,7 +263,7 @@ def download_music_embed_ytdl(download_url):
         thumbnail = ""
         all_files = glob.glob(f"{filename_wo_ext}.*")
         for file in all_files:
-            if file != filename:
+            if os.path.splitext(file)[-1] != ".mp3":
                 thumbnail = file
         filename = str(filename_wo_ext) + ".mp3"
         print(f"\n - Downloaded {filename}\n - Thumbnail {thumbnail}")
@@ -282,17 +282,20 @@ def download_music_embed_ytdl(download_url):
             audio_file.initTag()
         
         audio_file.tag.images.set(ImageFrame.FRONT_COVER, open(thumbnail, 'rb').read(), 'image/jpeg')
+        
+        #also set the artist name
+        audio_file.tag.artist = info_dict.get("uploader")
         audio_file.tag.save(version=eyed3.id3.ID3_V2_3)
         audio_file.tag.save()
-        # delete the thumbnail file as it had been embedded
-        os.remove(thumbnail)
+        # update the thumbnail file
+        os.replace(thumbnail, config.THUMBNAIL_PATH)
         # move the mp3 file to desired location
         final_filename = config.MUSIC_DIR + re.sub("[\"\']", "", filename)
         os.rename(filename, final_filename)
         filename = final_filename
         m_info.filename = filename
         
-        metadata ={"duration": str(info_dict.get("duration")), "artist": info_dict.get("creator")}
+        metadata ={"duration": str(info_dict.get("duration")), "artist": info_dict.get("uploader")}
         metadata_json = str(json.dumps(metadata))
         m_info.metadata = metadata_json
         dbHelper.insert_music_base_info(m_info)
