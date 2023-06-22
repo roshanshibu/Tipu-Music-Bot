@@ -59,7 +59,8 @@ async def process_message(chatid, message, bot, userid, is_group):
         downloading_msg_details = await bot.send_message(chat_id = chatid, text = "downloading...")
 
         # mp3file, error_message = musicHelper.download_music(message)
-        mp3file, error_message = musicHelper.download_music_ydl(message)
+        # mp3file, error_message = musicHelper.download_music_ytdl(message)
+        mp3file, error_message = musicHelper.download_music_embed_ytdl(message)
     
         if (mp3file != "ERROR"):
             logging.info(f"Downloaded file [{mp3file}]")
