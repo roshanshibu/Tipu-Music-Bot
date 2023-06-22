@@ -233,63 +233,75 @@ def download_music_ytdl(url):
         return process_error(str(e))
 
 def download_music_embed_ytdl(download_url):
-    m_info = dbHelper.MusicInfo()
-    m_info.url = download_url
-    m_info.source = "YouTube"
-    ydl_opts = {
-     'format': 'mp3/bestaudio/best',
-     'postprocessors': [{
-      'key': 'FFmpegExtractAudio',
-      'preferredcodec': 'mp3',
-     }],
-     'outtmpl': '%(creator)s - %(title)s.%(ext)s',
-     'writethumbnail': True,
-     'noplaylist': True,
-    }
-    
-    ydl = yt_dlp.YoutubeDL(ydl_opts)
-    info_dict = ydl.extract_info(download_url, download=True)
-    filename = ydl.prepare_filename(info_dict)
-    filename_wo_ext = Path(filename).with_suffix('')
-    # thumbnails may come in any format. To get the correct file, just find the one with the 
-    # same name as the music file but with a different extension
-    thumbnail = ""
-    all_files = glob.glob(f"{filename_wo_ext}.*")
-    for file in all_files:
-        if file != filename:
-            thumbnail = file
-    filename = str(filename_wo_ext) + ".mp3"
-    print(f"\n - Downloaded {filename}\n - Thumbnail {thumbnail}")
-    
-    if (filename):
-        # convert the thumbnail image type to jpeg in all cases
-        thumbnail_img = Image.open(thumbnail)
-        album_art_img = thumbnail_img
-        if "music.youtube.com/" in download_url:    
-            # crop the thumbnail only if its from youtube music
-            album_art_img = thumbnail_img.crop((280, 0, 1000, 720))
-        album_art_img.save(thumbnail, "jpeg")
-    
-    audio_file = eyed3.load(filename)
-    if (audio_file.tag == None):
-        audio_file.initTag()
-    
-    audio_file.tag.images.set(ImageFrame.FRONT_COVER, open(thumbnail, 'rb').read(), 'image/jpeg')
-    audio_file.tag.save(version=eyed3.id3.ID3_V2_3)
-    audio_file.tag.save()
-    # delete the thumbnail file as it had been embedded
-    os.remove(thumbnail)
-    # move the mp3 file to desired location
-    final_filename = config.MUSIC_DIR + re.sub("[\"\']", "", filename)
-    os.rename(filename, final_filename)
-    filename = final_filename
-    m_info.filename = filename
-    
-    metadata ={"duration": str(info_dict.get("duration")), "artist": info_dict.get("creator")}
-    metadata_json = str(json.dumps(metadata))
-    m_info.metadata = metadata_json
-    dbHelper.insert_music_base_info(m_info)
-    return (filename, metadata_json)
+    try:
+        #check if we have already downloaded from this url
+        p_file_meta = dbHelper.is_music_present_in_db(download_url)
+        if(p_file_meta is not None):
+            logging.info(f"File was already downloaded from [{download_url}]")
+            return (p_file_meta[0], p_file_meta[1])
+        
+        m_info = dbHelper.MusicInfo()
+        m_info.url = download_url
+        m_info.source = "YouTube"
+        ydl_opts = {
+        'format': 'mp3/bestaudio/best',
+        'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        }],
+        'outtmpl': '%(creator)s - %(title)s.%(ext)s',
+        'writethumbnail': True,
+        'noplaylist': True,
+        }
+        
+        ydl = yt_dlp.YoutubeDL(ydl_opts)
+        info_dict = ydl.extract_info(download_url, download=True)
+        filename = ydl.prepare_filename(info_dict)
+        filename_wo_ext = Path(filename).with_suffix('')
+        # thumbnails may come in any format. To get the correct file, just find the one with the 
+        # same name as the music file but with a different extension
+        thumbnail = ""
+        all_files = glob.glob(f"{filename_wo_ext}.*")
+        for file in all_files:
+            if file != filename:
+                thumbnail = file
+        filename = str(filename_wo_ext) + ".mp3"
+        print(f"\n - Downloaded {filename}\n - Thumbnail {thumbnail}")
+        
+        if (filename):
+            # convert the thumbnail image type to jpeg in all cases
+            thumbnail_img = Image.open(thumbnail)
+            album_art_img = thumbnail_img
+            if "music.youtube.com/" in download_url:    
+                # crop the thumbnail only if its from youtube music
+                album_art_img = thumbnail_img.crop((280, 0, 1000, 720))
+            album_art_img.save(thumbnail, "jpeg")
+        
+        audio_file = eyed3.load(filename)
+        if (audio_file.tag == None):
+            audio_file.initTag()
+        
+        audio_file.tag.images.set(ImageFrame.FRONT_COVER, open(thumbnail, 'rb').read(), 'image/jpeg')
+        audio_file.tag.save(version=eyed3.id3.ID3_V2_3)
+        audio_file.tag.save()
+        # delete the thumbnail file as it had been embedded
+        os.remove(thumbnail)
+        # move the mp3 file to desired location
+        final_filename = config.MUSIC_DIR + re.sub("[\"\']", "", filename)
+        os.rename(filename, final_filename)
+        filename = final_filename
+        m_info.filename = filename
+        
+        metadata ={"duration": str(info_dict.get("duration")), "artist": info_dict.get("creator")}
+        metadata_json = str(json.dumps(metadata))
+        m_info.metadata = metadata_json
+        dbHelper.insert_music_base_info(m_info)
+        return (filename, metadata_json)
+    except FileExistsError:
+        logging.error(f"File [{final_filename}] already exists")
+        return (final_filename, "")
+    except Exception as e:
+        return process_error(str(e))
 
 #mp3file = dowmload_music("https://youtu.be/lXPYzs2BgWg")
 #mp3file = dowmload_music("https://open.spotify.com/track/5JKU2tXiG3yvJtefNwe7ZQ?si=RaJ6sp2cR5Ow-7lZM7R3wA&utm_source=native-share-menu")

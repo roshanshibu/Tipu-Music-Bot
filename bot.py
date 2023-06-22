@@ -14,6 +14,7 @@ from telegram import Update
 import dbHelper
 import eyed3
 import config
+import sys
 #the working directory when the script is run as a service is [C:\Users\---\AppData\Local\Programs\Python\Python310]
 
 update_id = None
@@ -122,6 +123,9 @@ root_logger = logging.getLogger()
 handler = logging.handlers.RotatingFileHandler(
               config.LOG_PATH, maxBytes=120000, backupCount=5)
 handler.setFormatter(logging.Formatter(log_format, log_date_format))
+
+old_stdout = sys.stdout
+sys.stdout = handler.stream 
 
 root_logger.addHandler(handler)
 
