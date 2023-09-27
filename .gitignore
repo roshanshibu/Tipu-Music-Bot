@@ -6,3 +6,5 @@ config.py
 .tmp.driveupload/
 ytdlpMigrationTest.py
 Binaries/yt-dlp.conf
+TipuLogs.log
+.vscode/settings.json
