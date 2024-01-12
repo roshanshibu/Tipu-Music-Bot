@@ -8,3 +8,5 @@ ytdlpMigrationTest.py
 Binaries/yt-dlp.conf
 TipuLogs.log
 .vscode/settings.json
+*.mp3
+*.webp

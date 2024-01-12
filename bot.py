@@ -89,7 +89,7 @@ async def process_message(chatid, message, bot, userid, is_group):
             await bot.send_audio(
                 chat_id=chatid,
                 audio=open(mp3file, "rb"),
-                thumb=open(thumbnail_file_loc, "rb"),
+                thumbnail=open(thumbnail_file_loc, "rb"),
             )
             logging.info(f"MP3 file [{mp3file}] was sent to chat!")
             # save the file to pCloud also
